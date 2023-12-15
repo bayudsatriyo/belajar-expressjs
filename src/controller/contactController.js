@@ -52,6 +52,33 @@ const deleteContactHandler = async (req, res, next) => {
   }
 };
 
+const searchContactHandler = async (req, res, next) => {
+  try {
+    const dataContact = {
+      name: req.query.name,
+      email: req.query.email,
+      phone: req.query.phone,
+      page: req.query.page,
+      size: req.query.size,
+    };
+
+    console.log(dataContact);
+
+    const result = await contactService.SearchContact(req.user, dataContact);
+
+    res.status(200).json({
+      data: result.data,
+      paging: result.paging,
+    });
+  } catch (e) {
+    next(e);
+  }
+};
+
 export default {
-  addContactHandler, getContactByIdHandler, updateContactHandler, deleteContactHandler,
+  addContactHandler,
+  getContactByIdHandler,
+  updateContactHandler,
+  deleteContactHandler,
+  searchContactHandler,
 };

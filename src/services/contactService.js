@@ -89,6 +89,78 @@ const deleteContact = async (user, contactId) => {
   });
 };
 
+const SearchContact = async (user, dataContact) => {
+  const contactData = await validate(contactValdiation.searchContactValidation, dataContact);
+  console.log(contactData);
+  const skip = (contactData.page - 1) * contactData.size;
+  const filters = [];
+
+  filters.push({
+    username: user.username,
+  });
+  if (contactData.name) {
+    filters.push(
+      {
+        OR: [
+          {
+            first_name: {
+              contains: contactData.name,
+            },
+          },
+          {
+            last_name: {
+              contains: contactData.name,
+            },
+          },
+        ],
+      },
+    );
+  }
+
+  if (contactData.email) {
+    filters.push(
+      {
+        email: {
+          contains: contactData.email,
+        },
+      },
+    );
+  }
+
+  if (contactData.phone) {
+    filters.push(
+      {
+        phone: {
+          contains: contactData.phone,
+        },
+      },
+    );
+  }
+
+  const contact = await prismaClient.contact.findMany({
+    where: {
+      AND: filters,
+    },
+    take: contactData.size,
+    skip,
+  });
+
+  const totalItems = await prismaClient.contact.count({
+    where: {
+      AND: filters,
+    },
+  });
+
+  return {
+    data: contact,
+    paging: {
+      page: contactData.page,
+      total_items: totalItems,
+      total_page: Math.ceil(totalItems / contactData.size),
+    },
+  };
+};
+
 export default {
-  addContact, getContact, updateContact, deleteContact,
+  addContact, getContact, updateContact, deleteContact, SearchContact,
 };
