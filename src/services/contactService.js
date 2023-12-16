@@ -19,7 +19,7 @@ const addContact = async (user, request) => {
 };
 
 const getContact = async (user, contactid) => {
-  const contactId = await validate(contactValdiation.getContactIdValidation, contactid);
+  const contactId = validate(contactValdiation.getContactIdValidation, contactid);
 
   return prismaClient.contact.findFirst({
     where: {
@@ -43,7 +43,7 @@ const cekTotalContact = async (username, contactId) => prismaClient.contact.coun
 });
 
 const updateContact = async (user, contact) => {
-  const dataContact = await validate(contactValdiation.updateContactValdation, contact);
+  const dataContact = validate(contactValdiation.updateContactValdation, contact);
   console.log(dataContact);
   const totalContactValidation = await cekTotalContact(user.username, dataContact.id);
 
@@ -74,7 +74,7 @@ const updateContact = async (user, contact) => {
 };
 
 const deleteContact = async (user, contactId) => {
-  await validate(contactValdiation.getContactIdValidation, contactId);
+  validate(contactValdiation.getContactIdValidation, contactId);
 
   const TotalContact = await cekTotalContact(user.username, parseInt(contactId, 10));
 
@@ -90,7 +90,7 @@ const deleteContact = async (user, contactId) => {
 };
 
 const SearchContact = async (user, dataContact) => {
-  const contactData = await validate(contactValdiation.searchContactValidation, dataContact);
+  const contactData = validate(contactValdiation.searchContactValidation, dataContact);
   console.log(contactData);
   const skip = (contactData.page - 1) * contactData.size;
   const filters = [];

@@ -85,7 +85,7 @@ const getUserByUsername = async (username) => {
 };
 
 const updateUserByUsername = async (request) => {
-  const dataUser = await validate(userValidation.updateUserValidation, request);
+  const dataUser = validate(userValidation.updateUserValidation, request);
   console.log('ini data user:');
   console.log(dataUser);
   const cekUser = await getUserByUsername(dataUser.username);
@@ -126,7 +126,7 @@ const updateUserByUsername = async (request) => {
 };
 
 const logoutService = async (username) => {
-  const userName = await validate(userValidation.usernameValidation, username);
+  const userName = validate(userValidation.usernameValidation, username);
   console.log(userName);
 
   const verifiyUser = await getUserByUsername(userName);
