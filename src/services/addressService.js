@@ -56,4 +56,65 @@ const getAddressById = async (user, contactId, addressId) => {
   });
 };
 
-export default { addAddressService, getAddressById };
+const updateAddress = async (user, contactId, address) => {
+  console.log(user);
+  const addresses = validate(addressValidation.bodyAddressUpdateValidation, address);
+  await cekContact(user.username, contactId);
+
+  const TotalAddress = await prismaClient.address.count({
+    where: {
+      id: addresses.id,
+      contact_id: contactId,
+    },
+  });
+
+  if (TotalAddress !== 1) {
+    throw new ResponseError(404, 'address yang ingin anda edit sudah tidak ada');
+  }
+
+  return prismaClient.address.update({
+    where: {
+      id: addresses.id,
+      contact_id: contactId,
+    },
+    data: {
+      street: addresses.street,
+      city: addresses.city,
+      country: addresses.country,
+      postal_code: addresses.postal_code,
+    },
+    select: {
+      id: true,
+      street: true,
+      city: true,
+      country: true,
+      postal_code: true,
+    },
+  });
+};
+
+const deleteAddress = async (user, contactId, addressId) => {
+  const addressid = await validate(addressValidation.idAddressValidation, addressId);
+  await cekContact(user.username, contactId);
+
+  const TotalAddress = await prismaClient.address.count({
+    where: {
+      id: addressid,
+      contact_id: contactId,
+    },
+  });
+
+  if (TotalAddress !== 1) {
+    throw new ResponseError(404, 'address yang ingin anda edit sudah tidak ada');
+  }
+
+  return prismaClient.address.delete({
+    where: {
+      id: addressid,
+    },
+  });
+};
+
+export default {
+  addAddressService, getAddressById, updateAddress, deleteAddress,
+};

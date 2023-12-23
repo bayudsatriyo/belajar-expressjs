@@ -22,5 +22,7 @@ userRouter.get('/api/search', contactController.searchContactHandler);
 // Address API
 userRouter.post('/api/address/:contactid', addressController.addAddressHandler);
 userRouter.get('/api/address/:addressId/contact/:contactId', addressController.getAddressByIdHandler);
+userRouter.put('/api/address/:addressId/contact/:contactId', addressController.updateAddressByIdHandler);
+userRouter.delete('/api/address/:addressId/contact/:contactId', addressController.deleteAddressByIdHandler);
 
 export default userRouter;
